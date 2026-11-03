@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+work/
+outputs/
+private/
+data/
+reports/
+backups/
+Partitions/
+.env
+.env.*
+!.env.example
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+workspace.json
+jobfit-profile.json
+jobfit-backup.json
+Cookies*
+Login Data*
+.DS_Store
+Thumbs.db

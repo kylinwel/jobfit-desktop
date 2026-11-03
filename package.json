@@ -1,0 +1,62 @@
+{
+  "name": "jobfit-desktop",
+  "version": "0.1.0",
+  "description": "Local-first job matching, truthful resumes and daily internship digests for BOSS and Nowcoder.",
+  "main": "src/main/index.cjs",
+  "type": "module",
+  "license": "GPL-3.0-only",
+  "author": "kylinwel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kylinwel/jobfit-desktop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kylinwel/jobfit-desktop/issues"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "electron .",
+    "check": "node scripts/check.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0",
+    "linkedom": "0.18.15"
+  },
+  "build": {
+    "appId": "io.github.kylinwel.jobfit",
+    "productName": "JobFit",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "JobFit-Setup-${version}-${arch}.${ext}"
+    },
+    "artifactName": "JobFit-${version}-${arch}.${ext}",
+    "portable": {
+      "artifactName": "JobFit-Portable-${version}-${arch}.${ext}"
+    }
+  }
+}

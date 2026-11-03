@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JobFit · 求职工作台</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="embedded.css"></head>
+<body>
+<header class="desktop-app-header"><a class="desktop-app-brand" href="index.html?embedded=1">职选 <b>JobFit</b></a><span>岗位 · 简历 · 每日整理</span><div><button id="desktop-demo">查看虚构示例</button><button id="desktop-data">数据目录</button><a href="https://github.com/kylinwel/jobfit-desktop" target="_blank" rel="noreferrer">GitHub ↗</a></div></header>
+<aside class="sidebar">
+  <a class="brand" href="index.html"><span class="mark">职</span><span>职选 <small>JOBFIT</small></span></a>
+  <p class="side-label">个人求职工作台</p>
+  <nav aria-label="主导航">
+    <button data-view="jobs" class="active"><span>01</span> 岗位筛选</button>
+    <button data-view="profile"><span>02</span> 真实经历</button>
+    <button data-view="queue"><span>03</span> 沟通记录</button>
+    <button data-view="digest"><span>04</span> 岗位日报</button>
+    <button data-view="accounts"><span>04</span> 平台账号</button>
+    <button data-view="settings"><span>05</span> 模型设置</button>
+  </nav>
+  <div class="side-bottom"><span class="dot"></span> 数据保存在本机<p id="mode">BOSS 直聘扩展 · v0.1</p><a href="README.md" target="_blank">使用说明 ↗</a></div>
+</aside>
+<main>
+  <header><div><p class="eyebrow">JOBFIT / INTERNSHIP</p><h1 id="page-title">岗位工作台</h1></div><div class="header-actions"><button id="demo" class="quiet">查看示例</button><span class="local-badge" id="profile-badge">资料待完善</span></div></header>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <section id="view-jobs" class="view">
+    <div class="toolbar"><div class="search"><label for="search">搜索</label><input id="search" placeholder="公司、岗位、技能关键词"></div><select id="filter" aria-label="筛选状态"><option value="all">全部岗位</option><option value="match">条件符合</option><option value="review">需要确认</option><option value="blocked">条件冲突</option></select><select id="source-filter" aria-label="岗位来源"><option value="all">全部来源</option><option value="boss">BOSS 直聘</option><option value="nowcoder">牛客网</option></select><button id="import-job">粘贴岗位</button><button id="go-accounts">平台账号</button><select id="collect-platform" aria-label="采集平台"><option value="boss">BOSS 直聘</option><option value="nowcoder">牛客网</option></select><button id="collect" class="primary">采集当前页面</button></div>
+    <div class="summary-strip" id="summary"></div>
+    <div class="workspace"><div class="job-list" id="job-list" aria-label="岗位列表"></div><article class="job-detail" id="job-detail"><div class="empty"><span>从一个岗位开始</span><p>导入岗位，查看条件是否匹配，再准备对应简历。</p><p class="muted">公司适合与否，需要结合具体岗位要求判断。</p></div></article></div>
+  </section>
+  <section id="view-profile" class="view" hidden>
+    <div class="section-heading"><div><h2>简历资料</h2><p>填写实际参与的经历，用于整理简历和比较岗位要求。</p></div><div class="actions"><button id="import-profile">导入资料 JSON</button><button id="export-profile">导出备份</button></div></div>
+    <form id="profile-form">
+      <div class="form-panel"><h3>基本信息</h3><div class="form-grid" id="profile-fields"></div></div>
+      <div class="form-panel"><h3>技能与学习程度</h3><p class="muted">每行一项，格式：Python | 入门。可填写：入门、熟悉、熟练。</p><textarea id="skills" rows="4" aria-label="技能与学习程度"></textarea></div>
+      <div class="form-panel"><div class="section-heading"><div><h3>项目素材</h3><p class="muted">描述自己实际完成的部分；AI 辅助、跟随教程的经历请如实注明。</p></div><button type="button" id="add-project">＋ 添加项目</button></div><div id="projects"></div></div>
+      <button class="primary" type="submit">保存资料与求职条件</button>
+    </form>
+  </section>
+  <section id="view-queue" class="view" hidden>
+    <div class="section-heading"><div><h2>待投清单</h2><p>审核岗位与平台简历后，按队列执行；可随时暂停。</p></div></div>
+    <div class="queue-controls"><button id="dry-run" class="primary">启动演练</button><button id="stop">暂停队列</button><label class="check"><input type="checkbox" id="real-ack"> 我已检查队列和平台中将发送的简历，同意执行这些岗位的投递</label><button id="real-run">启动真实发送</button></div>
+    <p class="muted">BOSS 支持已建立的会话；牛客支持站内申请，官网网申需手动处理。使用平台已有简历，每分钟最多一项、每天最多五次；结果未验证时暂停且不重试。平台适配尚需你的登录账号实测。</p>
+    <p id="queue-status" role="status"></p><div id="queue-list"></div><h3 class="log-title">操作记录</h3><div id="events"></div>
+  </section>
+  <section id="view-digest" class="view" hidden>
+    <div class="section-heading"><div><h2>每日岗位表</h2><p>读取公开岗位，在本机按已保存的简历资料匹配；保留得分 ≥ 60 且没有硬性条件冲突的新发岗位。</p></div><div class="actions"><button id="digest-folder">报表目录</button><button id="digest-export">下载 CSV</button><button id="digest-run" class="primary">立即整理</button></div></div>
+    <form id="digest-settings" class="digest-settings"><label class="check"><input type="checkbox" id="digest-enabled">启用每日整理与桌面通知</label><label>每日时间（北京时间）<input id="digest-time" type="time" value="09:00" required></label><span>匹配分 ≥ 60</span><button type="submit">保存设置</button></form>
+    <p class="muted digest-runtime">JobFit 打开时定时运行，错过后下次打开补跑。不会自动投递；表格以 CSV 保存，可用 Excel 打开。BOSS 只读取已打开的平台页面。</p>
+    <div class="digest-toolbar"><p id="digest-status" role="status">尚未启用</p><label>历史日报<select id="digest-history" aria-label="选择历史日报"><option value="">暂无日报</option></select></label></div>
+    <div id="digest-result"></div>
+  </section>
+  <section id="view-accounts" class="view" hidden>
+    <div class="section-heading"><div><h2>招聘平台账号</h2><p>在独立平台窗口中登录，登录会话只保存在本机。密码与验证码由你直接在平台输入。</p></div></div>
+    <div id="platform-list" class="platform-list"></div>
+    <form id="execution-form" class="form-panel narrow"><h3>牛客投递简历</h3><p class="muted">先在牛客上传或完善简历，再填写其准确名称。队列会选择并核对这个名称；这里生成的岗位专属简历仍需先手动上传到平台。</p><label>牛客平台显示的简历名称<input name="nowcoderResumeName" maxlength="200" placeholder="例如：张三-软件测试实习.pdf" autocomplete="off"></label><button type="submit">保存投递设置</button></form>
+    <p class="muted">打开岗位 → 采集当前页 → 生成并审核简历 → 到沟通记录启动队列。牛客岗位列表用于初筛，投递前请打开并采集完整详情。登录过期、验证码和需要补填的信息会交给你处理。</p>
+  </section>
+  <section id="view-settings" class="view narrow" hidden>
+    <h2>模型连接</h2><p class="muted">默认使用岗位关键词整理经历。配置模型后，也可以按岗位要求挑选相关经历。</p>
+    <form id="model-form" class="form-panel">
+      <label>兼容接口的完整 Chat Completions URL<input name="endpoint" type="url" placeholder="https://你的服务地址/v1/chat/completions"></label>
+      <label>模型名称<input name="model" placeholder="填入服务商提供的模型 ID"></label>
+      <label>API Key<input name="key" type="password" autocomplete="off" placeholder="留空保留现有密钥"></label>
+      <label class="check"><input name="clearKey" type="checkbox"> 清除已保存密钥</label>
+      <p id="key-status" class="muted"></p><p class="muted">调用时会向你配置的端点发送岗位描述和已确认项目素材，不发送联系信息字段。素材文本里如有个人信息，也会随文本发送。密钥仅存本机，未加密。</p>
+      <button class="primary" type="submit">保存模型设置</button>
+    </form>
+  </section>
+</main>
+<dialog id="job-dialog"><form id="job-form"><div class="section-heading"><h2>粘贴岗位</h2><button type="button" id="close-dialog" aria-label="关闭">×</button></div><div class="form-grid"><label>公司<input name="company" required></label><label>岗位名称<input name="title" required></label><label>城市<input name="city" placeholder="未填写则标为需确认"></label><label>薪资<input name="salary"></label></div><label>岗位链接（可选）<input name="url" type="url" placeholder="BOSS 或牛客岗位详情链接"></label><label>完整岗位要求<textarea name="description" rows="9" required></textarea></label><button class="primary" type="submit">导入并分析</button></form></dialog>
+<input type="file" id="profile-file" accept=".json,application/json" hidden>
+<script type="module" src="app.js"></script>
+</body></html>
